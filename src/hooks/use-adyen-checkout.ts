@@ -1,4 +1,6 @@
-import { useCallback, useState } from "react";
+"use client";
+
+import { useState, useCallback } from "react";
 import { AdyenCheckout, Dropin, Card } from "@adyen/adyen-web";
 import { Types } from "@adyen/api-library";
 import { payment } from "@adyen/api-library/lib/src/typings";
@@ -116,14 +118,13 @@ export const useAdyenCheckout = () => {
       }
 
       if (checkoutInstance) {
-        console.log("Checkout instance already initialized");
         return checkoutInstance;
       }
 
       // modify amount value to min unit
       const minAmount = getMinAmount(config.amount.value);
 
-      const configuration = {
+      const configuration: any = {
         amount: {
           value: minAmount,
           currency: config.amount.currency,
@@ -134,7 +135,6 @@ export const useAdyenCheckout = () => {
           enabled: true,
         },
         onPaymentCompleted: (result: any, component: any) => {
-          console.log("Payment completed:", result);
           setPaymentResult({
             type: "completed",
             data: result,
@@ -142,7 +142,6 @@ export const useAdyenCheckout = () => {
           setCheckoutInstance(null); // Clear instance after payment completion
         },
         onPaymentFailed: (result: any, component: any) => {
-          console.log("Payment failed:", result);
           setPaymentResult({
             type: "failed",
             data: result,
@@ -150,7 +149,6 @@ export const useAdyenCheckout = () => {
           setCheckoutInstance(null); // Clear instance after payment failure
         },
         onError: (error: any) => {
-          console.error("Checkout error:", error);
           setPaymentResult({
             type: "error",
             error: error.message || "Unknown error occurred",
@@ -195,11 +193,8 @@ export const useAdyenCheckout = () => {
           paymentMethodsResponse: paymentMethods.response,
           clientKey: paymentMethods.clientKey,
           environment: paymentMethods.environment || "TEST",
-          onSubmit: async (state, component, actions) => {
+          onSubmit: async (state: any, component: any, actions: any) => {
             try {
-
-              console.log(state)
-
               const response = await fetch("/api/adyen/payments", {
                 method: "POST",
                 headers: {
@@ -220,24 +215,19 @@ export const useAdyenCheckout = () => {
               }
 
               const result = await response.json();
-              console.log("Payment submission result:", result);
               setPaymentDetails(result);
               actions.resolve(result);
             } catch (error) {
-              console.error("Payment submission error:", error);
               actions.reject();
             }
           },
         });
       }
 
-      console.log("Adyen Checkout configuration:", configuration);
-
       // Initialize Adyen Checkout
       const adyenCheckout = await AdyenCheckout(configuration);
       return adyenCheckout;
     } catch (error: any) {
-      console.error("Error initializing Adyen Checkout:", error);
       setPaymentResult({
         type: "error",
         error: error.message || "Unknown error occurred",
@@ -250,13 +240,12 @@ export const useAdyenCheckout = () => {
     const dropInConfiguration = {
       paymentMethodComponents: [Card],
       onReady: () => {
-        console.log("Drop-in is ready");
+        // Drop-in is ready
       },
       // Configuration for individual payment methods.
       paymentMethodsConfiguration: {
         card: {
           onError: () => {
-            console.log("Card component error:");
             setPaymentResult({
               type: "error",
               error: "An error occurred in the card component",

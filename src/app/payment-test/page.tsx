@@ -64,7 +64,6 @@ export default function PaymentTest() {
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error initializing checkout:", error);
         setLoading(false);
       });
   };
