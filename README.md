@@ -1,36 +1,175 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Adyen Payment Test UI - Next.js
+
+A comprehensive Next.js application for testing Adyen payment integrations with both client-side Drop-in components and server-side API integration using the official Adyen libraries.
+
+## Features
+
+- 🎛️ Interactive payment configuration UI
+- 💳 Adyen Drop-in payment component integration  
+- 🖥️ Server-side API integration using `@adyen/api-library`
+- 🧪 Test card numbers for development
+- 📊 Real-time payment result display
+- 🎨 Responsive Tailwind CSS design
+- 🔧 Support for multiple currencies and environments
+- 🪝 Webhook handling for payment notifications
+- 🔒 TypeScript support for type safety
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18.x or later
+- npm or yarn
+- Adyen test account with API credentials
+
+### Installation
+
+1. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+2. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+
+3. Configure your Adyen credentials in `.env.local`:
+```env
+ADYEN_API_KEY=your_api_key_from_customer_area
+ADYEN_CLIENT_KEY=test_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ADYEN_MERCHANT_ACCOUNT=YourMerchantAccountName
+ADYEN_ENVIRONMENT=TEST
+ADYEN_HMAC_KEY=your_webhook_hmac_key_optional
+```
+
+4. Start the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Getting Adyen Credentials
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **API Key & Client Key**: 
+   - Login to [Adyen Customer Area (Test)](https://ca-test.adyen.com)
+   - Go to Developers → API credentials
+   - Create or select credentials
+   - Copy API key and Client key
 
-## Learn More
+2. **Merchant Account**: 
+   - Found in Customer Area → Account → Merchant accounts
 
-To learn more about Next.js, take a look at the following resources:
+3. **HMAC Key** (Optional for webhooks):
+   - Go to Developers → Webhooks
+   - Create or edit webhook configuration
+   - Generate HMAC key for signature validation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Navigate to the Payment Test page (`/payment-test`)
+2. Configure payment settings:
+   - Amount (in cents/minor currency units)
+   - Currency (USD, EUR, GBP, MXN)
+   - Country code and locale
+   - Payment reference
+3. Click "Initialize Payment" to create a session
+4. Use test card details to complete payments
+5. View payment results and webhook data
 
-## Deploy on Vercel
+## API Endpoints
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### `POST /api/adyen/sessions`
+Creates a payment session for the Drop-in component.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Request Body:**
+```json
+{
+  "amount": 1000,
+  "currency": "USD",
+  "countryCode": "US",
+  "shopperLocale": "en-US",
+  "reference": "payment-123"
+}
+```
+
+**Response:**
+```json
+{
+  "id": "session_id",
+  "sessionData": "encrypted_session_data",
+  "clientKey": "test_CLIENT_KEY",
+  "environment": "TEST"
+}
+```
+
+### `POST /api/adyen/webhooks`
+Handles Adyen webhook notifications for payment events.
+
+## Test Cards
+
+Use these test cards in the test environment:
+
+| Card Type | Number | CVC | Expiry | Result |
+|-----------|--------|-----|--------|--------|
+| Visa | 4111 1111 1111 1111 | Any 3 digits | Any future date | Success |
+| Mastercard | 5555 5555 5555 4444 | Any 3 digits | Any future date | Success |
+| American Express | 3700 0000 0000 002 | Any 4 digits | Any future date | Success |
+| Visa (Declined) | 4000 0000 0000 0002 | Any 3 digits | Any future date | Declined |
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── api/adyen/
+│   │   ├── sessions/route.ts     # Payment session creation
+│   │   └── webhooks/route.ts     # Webhook handling
+│   ├── payment-test/
+│   │   └── page.tsx             # Payment test UI
+│   ├── globals.css              # Global styles
+│   ├── layout.tsx               # App layout
+│   └── page.tsx                 # Home page
+├── .env.example                 # Environment variables template
+├── package.json                 # Dependencies
+└── README.md                   # This file
+```
+
+## Environment Variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `ADYEN_API_KEY` | Server-side API key | `AQE1hmfx...` |
+| `ADYEN_CLIENT_KEY` | Client-side key | `test_ABC...` |
+| `ADYEN_MERCHANT_ACCOUNT` | Merchant account name | `YourCompany` |
+| `ADYEN_ENVIRONMENT` | API environment | `TEST` or `LIVE` |
+| `ADYEN_HMAC_KEY` | Webhook HMAC key (optional) | `ABC123...` |
+
+## Development Tips
+
+1. **Install Dependencies**: Make sure to run `npm install` after cloning
+2. **Testing Webhooks Locally**: Use ngrok or similar tools to expose your local server
+3. **Debug Mode**: Check browser console and server logs for detailed error information
+4. **Session Management**: Each payment creates a new session with unique reference
+
+## Built With
+
+- [Next.js 15](https://nextjs.org/) - React framework with App Router
+- [Adyen Web SDK](https://docs.adyen.com/online-payments/web-drop-in) - Client-side payment components
+- [Adyen API Library](https://docs.adyen.com/development-resources/libraries#javascript) - Server-side API integration
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [TypeScript](https://www.typescriptlang.org/) - Type-safe JavaScript
+
+## Resources
+
+- [Adyen Documentation](https://docs.adyen.com)
+- [Web Drop-in Integration](https://docs.adyen.com/online-payments/web-drop-in)
+- [Sessions API Reference](https://docs.adyen.com/api-explorer/#/CheckoutService/v70/sessions)
+- [Test Card Numbers](https://docs.adyen.com/development-resources/testing/test-card-numbers)
+- [Webhook Notifications](https://docs.adyen.com/development-resources/webhooks)
+- [Customer Area (Test)](https://ca-test.adyen.com)

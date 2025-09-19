@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -12,18 +13,36 @@ export default function Home() {
           height={38}
           priority
         />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+        <h1 className="text-2xl font-bold text-center sm:text-left">
+          Adyen Payment Testing
+        </h1>
+        <p className="text-lg text-center sm:text-left text-gray-600 dark:text-gray-300">
+          Test your Adyen payment integration with server-side API support
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl">
+          <Link
+            href="/payment-test"
+            className="rounded-lg border border-gray-200 dark:border-gray-800 p-6 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+          >
+            <h2 className="text-xl font-semibold mb-2">💳 Payment Test</h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Test Adyen Drop-in with server-side API integration
+            </p>
+          </Link>
+
+          <a
+            href="https://docs.adyen.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-lg border border-gray-200 dark:border-gray-800 p-6 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+          >
+            <h2 className="text-xl font-semibold mb-2">📚 Documentation</h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Learn about Adyen's payment platform
+            </p>
+          </a>
+        </div>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <a

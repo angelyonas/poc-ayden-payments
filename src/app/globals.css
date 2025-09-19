@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import '@adyen/adyen-web/styles/adyen.css';
 
 :root {
   --background: #ffffff;
