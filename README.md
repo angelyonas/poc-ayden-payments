@@ -82,6 +82,74 @@ yarn dev
 4. Use test card details to complete payments
 5. View payment results and webhook data
 
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── api/
+│   │   └── adyen/
+│   │       ├── sessions/
+│   │       │   └── route.ts         # Payment session creation API
+│   │       └── webhooks/
+│   │           └── route.ts         # Webhook handling API
+│   ├── payment-test/
+│   │   └── page.tsx                # Main payment test interface
+│   ├── components/
+│   │   ├── PaymentForm.tsx         # Payment configuration form
+│   │   ├── AdyenDropin.tsx         # Adyen Drop-in component wrapper
+│   │   ├── PaymentResult.tsx       # Payment result display
+│   │   └── TestCards.tsx           # Test card information component
+│   ├── lib/
+│   │   ├── adyen.ts                # Adyen client configuration
+│   │   ├── utils.ts                # Utility functions
+│   │   └── types.ts                # TypeScript type definitions
+│   ├── styles/
+│   │   └── adyen.css               # Adyen-specific styles
+│   ├── globals.css                 # Global Tailwind CSS styles
+│   ├── layout.tsx                  # Root layout component
+│   └── page.tsx                    # Home page component
+├── public/
+│   ├── favicon.ico                 # Site favicon
+│   └── images/                     # Static images
+├── types/
+│   ├── adyen.ts                    # Adyen-specific type definitions
+│   └── payment.ts                  # Payment-related types
+├── .env.example                    # Environment variables template
+├── .env.local                      # Local environment variables (gitignored)
+├── next.config.js                  # Next.js configuration
+├── package.json                    # Project dependencies and scripts
+├── tailwind.config.js              # Tailwind CSS configuration
+├── tsconfig.json                   # TypeScript configuration
+└── README.md                       # Project documentation
+```
+
+## File Descriptions
+
+### Core Application Files
+- **`src/app/layout.tsx`**: Root layout with global providers and metadata
+- **`src/app/page.tsx`**: Landing page with project overview and navigation
+- **`src/app/payment-test/page.tsx`**: Main payment testing interface
+
+### API Routes
+- **`src/app/api/adyen/sessions/route.ts`**: Creates Adyen payment sessions
+- **`src/app/api/adyen/webhooks/route.ts`**: Handles payment webhook notifications
+
+### Components
+- **`src/components/PaymentForm.tsx`**: Form for configuring payment parameters
+- **`src/components/AdyenDropin.tsx`**: React wrapper for Adyen Drop-in component
+- **`src/components/PaymentResult.tsx`**: Displays payment results and session data
+- **`src/components/TestCards.tsx`**: Shows available test card numbers
+
+### Utilities and Configuration
+- **`src/lib/adyen.ts`**: Adyen API client initialization and configuration
+- **`src/lib/utils.ts`**: Common utility functions (amount formatting, validation)
+- **`src/lib/types.ts`**: Shared TypeScript interfaces and types
+
+### Styling
+- **`src/globals.css`**: Global styles and Tailwind CSS imports
+- **`src/styles/adyen.css`**: Custom styles for Adyen components
+
 ## API Endpoints
 
 ### `POST /api/adyen/sessions`
@@ -121,24 +189,6 @@ Use these test cards in the test environment:
 | Mastercard | 5555 5555 5555 4444 | Any 3 digits | Any future date | Success |
 | American Express | 3700 0000 0000 002 | Any 4 digits | Any future date | Success |
 | Visa (Declined) | 4000 0000 0000 0002 | Any 3 digits | Any future date | Declined |
-
-## Project Structure
-
-```
-src/
-├── app/
-│   ├── api/adyen/
-│   │   ├── sessions/route.ts     # Payment session creation
-│   │   └── webhooks/route.ts     # Webhook handling
-│   ├── payment-test/
-│   │   └── page.tsx             # Payment test UI
-│   ├── globals.css              # Global styles
-│   ├── layout.tsx               # App layout
-│   └── page.tsx                 # Home page
-├── .env.example                 # Environment variables template
-├── package.json                 # Dependencies
-└── README.md                   # This file
-```
 
 ## Environment Variables
 
